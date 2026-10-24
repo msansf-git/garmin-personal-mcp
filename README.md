@@ -81,10 +81,6 @@ The activity list pages all the way back to the first activity on the account, 5
 | `get_weight`, `get_weight_goals` | Measurements and goals, up to a year. |
 | `get_food_logs` | Nutrition for one day. |
 | `get_profile`, `get_heart_rate_zones`, `get_fitness_age` | Settings, zones per sport, fitness age. |
-| `get_vo2_max` | Latest VO₂ max, a specific date, or history for a date range via Garmin Connect. |
-| `get_cycling_ftp` | Latest cycling FTP, a specific date, or date-range history via Garmin Connect. |
-| `get_training_status` | Latest training status, a specific date, or daily records across a date range via Garmin Connect. |
-| `garmin_connect_login`, `garmin_connect_verify_mfa` | Start Garmin Connect sign-in and complete MFA when required. Credentials are deployment secrets, never tool arguments. |
 | `get_menstrual_cycle_summary`, `get_menstrual_cycle_day` | Cycle data for a date. |
 | `get_raw` | GET any other Personal API path, for endpoints Garmin adds later. |
 
@@ -105,9 +101,9 @@ It is stateless: each request builds its own server and transport, no session id
 
 The endpoint is `https://<your app>/mcp` on all of them. Railway, Render and Fly run `pnpm start`, which binds to the port they assign; Vercel imports the same entry and serves it as a function. On Vercel, use the production URL: preview URLs sit behind Vercel's own login, which MCP clients can't pass.
 
-### Garmin Connect performance metrics
+### Garmin Connect performance metrics (separate service)
 
-The separate `garmin-vercel-oauth-wrapper` adds `get_vo2_max`, `get_cycling_ftp`, and `get_training_status` to the MCP endpoint and handles Garmin Connect web-session authentication. The Personal API server in this repository does not implement Garmin Connect login or store Garmin Connect session tokens.
+This Personal API MCP intentionally does **not** implement Garmin Connect web-session login, MFA, or performance-metric tools. Those are provided by the separate `garmin-vercel-oauth-wrapper`, which adds `get_vo2_max`, `get_cycling_ftp`, and `get_training_status` to the combined endpoint. Configure and operate that wrapper using its own README. Do not add a manually copied Garmin Connect OAuth token to this server; the wrapper handles sign-in and encrypted session persistence.
 
 **Run it on a machine you own** (a VPS, a home server, a Pi):
 
