@@ -29,6 +29,7 @@
     "model-context-protocol",
     "garmin-connect",
     "personal-api",
+    "claude",
     "fit"
   ],
   "repository": {
