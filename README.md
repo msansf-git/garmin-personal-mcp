@@ -101,6 +101,10 @@ It is stateless: each request builds its own server and transport, no session id
 
 The endpoint is `https://<your app>/mcp` on all of them. Railway, Render and Fly run `pnpm start`, which binds to the port they assign; Vercel imports the same entry and serves it as a function. On Vercel, use the production URL: preview URLs sit behind Vercel's own login, which MCP clients can't pass.
 
+### Garmin Connect performance metrics (separate service)
+
+This Personal API MCP intentionally does **not** implement Garmin Connect web-session login, MFA, or performance-metric tools. Those are provided by the separate `garmin-vercel-oauth-wrapper`, which adds `get_vo2_max`, `get_cycling_ftp`, and `get_training_status` to the combined endpoint. Configure and operate that wrapper using its own README. Do not add a manually copied Garmin Connect OAuth token to this server; the wrapper handles sign-in and encrypted session persistence.
+
 **Run it on a machine you own** (a VPS, a home server, a Pi):
 
 ```sh
