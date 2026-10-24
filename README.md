@@ -105,16 +105,9 @@ It is stateless: each request builds its own server and transport, no session id
 
 The endpoint is `https://<your app>/mcp` on all of them. Railway, Render and Fly run `pnpm start`, which binds to the port they assign; Vercel imports the same entry and serves it as a function. On Vercel, use the production URL: preview URLs sit behind Vercel's own login, which MCP clients can't pass.
 
-### Optional Garmin Connect metrics authentication
+### Garmin Connect performance metrics
 
-The Personal API tools continue using `GARMIN_PERSONAL_API_KEY`. The three additional performance-metric tools use an independent, unofficial Garmin Connect web-session login. To enable them on Vercel, configure these **private server-side environment variables**:
-
-| Variable | Value |
-|---|---|
-| `GARMIN_CONNECT_EMAIL` | Garmin Connect account email |
-| `GARMIN_CONNECT_PASSWORD` | Garmin Connect password |
-
-No database, KV store, cache, or disk storage is used for Garmin Connect sessions. Session tokens and pending MFA state live only in process memory and disappear when the runtime instance restarts. Configure only `GARMIN_CONNECT_EMAIL` and `GARMIN_CONNECT_PASSWORD` as private server-side environment variables, then call `garmin_connect_login`; if Garmin asks for verification, call `garmin_connect_verify_mfa`. On serverless platforms, login, MFA, and metric requests may reach different instances, and a restart clears authentication; this is the intentional trade-off for no persistent session storage. These tools support latest values by default, `date` for a single date, or `from_date` and `to_date` for an inclusive range (maximum 366 days per call).
+The separate `garmin-vercel-oauth-wrapper` adds `get_vo2_max`, `get_cycling_ftp`, and `get_training_status` to the MCP endpoint and handles Garmin Connect web-session authentication. The Personal API server in this repository does not implement Garmin Connect login or store Garmin Connect session tokens.
 
 **Run it on a machine you own** (a VPS, a home server, a Pi):
 
